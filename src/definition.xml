@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <Module>
   <ModulePrefs title="SVC Storage Pool Panel" 
-  description="This gadget shows status and capacity information for the IBM SAN SVC Storage Pool."
-          thumbnail="incidentPanelThm.png"
-  /> 
+		description="Display detailed availability information for a single element including topological parents status and service monitor status."
+		thumbnail="elementPanelThm.png">
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
   <Content type="html">
 <![CDATA[ 
-<html>
-<head>
-	#includeResources(jquery,jqueryui)
-	<title>Incident Panel</title>
-	
-	<link rel="stylesheet" type="text/css"
-		href="__UPTIME_GADGET_BASE__/incidentPanel.css" />
-	<script type="text/javascript"
-		src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js">
-	</script>
-	<script type="text/javascript"
-		src="__UPTIME_GADGET_BASE__/tree.js">
-	</script>
-	<script type="text/javascript"
-		src="__UPTIME_GADGET_BASE__/api_queries.js">
-	</script>
-	<script type="text/javascript"
-		src="__UPTIME_GADGET_BASE__/render_incident_panel.js">
-	</script>
-	<script type="text/javascript"
-		src="__UPTIME_GADGET_BASE__/incidentPanel.js">
-	</script>
-</head>
 
-<body>
+<html lang="en">
+	<head>
+		#includeResources(jquery)
 
-	<div id="svcStoragePoolGadget">
-		<div id="editPanel" class="editPanel">
-			<div class="groups">
-				<label for="groups">Display Groups (including subgroups):</label>
-				<select id="groups" class="svc-storage-pool-setting"/>
-			</div>
-			<div class="refreshRate">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>Element Panel</title>
+
+		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/svcStoragePool.css" />
+
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>		
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/svcStoragePool.js"></script>		
+	</head>
+	<body>
+		<div id="widgetSettings">
+
+			<form id="widgetOptions">
+				<div class="elementSelectorDiv editSection">
+					<label for="elementId">Select Element:</label><br/>
+					<select id="elementId" class="widget-option">
+						<option value="-1">Loading...</option>
+					</select>
+				</div>
+
+				<div class="refreshRateDiv editSection">
 					<label for="refreshRate">Refresh Rate:</label>
-					<select id="refreshRate" class="svc-storage-pool-setting" name="refreshRate">
+					<select id="refreshRate" class="widget-option" name="refreshRate">
 						<option value="30">30s</option>
 						<option value="60">1m</option>
 						<option value="300">5m</option>
@@ -49,44 +44,24 @@
 						<option value="3600">1h</option>
 						<option value="-1">Never</option>
 					</select>
-			</div>
-			<div class="closeButton">
-				<button id="closeButton">Close</button>
-			</div>
+				</div>
+				<div class="buttonsDiv">
+					<button id="closeSettings">Close</button>
+				</div>
+			</form>
 		</div>
-	
-		<div id="incidentPanel">
-			<div id="incidentPanelGroupDiv">&nbsp;
-			</div>
-			<div id="incidentPanelSummaryDiv">
-				<table class="incidentsSummary">
-					<tr>
-						<td class="incidentSummary color-text-CRIT CRIT">
-							<div class="incidentSummaryCount CRIT">&nbsp;</div>
-							<div class="incidentSummaryLegend">CRIT</div></td>
-						<td class="incidentSummary color-text-WARN OTHER">
-							<div class="incidentSummaryCount OTHER">&nbsp;</div>
-							<div class="incidentSummaryLegend">OTHER</div></td>
-						<td class="incidentSummary color-text-OK OK">
-							<div class="incidentSummaryCount OK">&nbsp;</div>
-							<div class="incidentSummaryLegend">OK</div></td>
-					</tr>
-				</table>
-			</div>
-			<div id="incidentPanelBarChartDiv">
-				<table class="incidentPanelBarChart"><tr id="incidentPanelBarChartRow"><td>&nbsp;</td></tr></table>
-			</div>
-			<div id="incidentPanelTableDiv">
-			</div>
+
+		<div id = "widgetChart">
+			<table id="elementInfoTable"><tbody><tr>
+				<td id="elementStatus" class="element-status"><div class="os-icon-container"><div class="os-icon"><img src="/images/icon-system.gif" class="os-icon-img"/></div></div><div id="elementStatusText"></div></td>
+				<td id="topoParentsStatus" class="topo-parents-status">Topological Parents:<br/></td>
+			</tr><tbody></table>
+			<table id='statusTable' style='width:100%; border:0px;'><thead></thead><tbody></tbody></table>
 		</div>
-	</div>
-	
-	<div id="notificationPanel"></div>
-
-	<span style="position: fixed" id="incidentPanelTooltip"></span>
-
-</body>
+		<div id="statusBar"></div>
+	</body>
 </html>
+
 ]]>
   </Content> 
 </Module>
