@@ -1,0 +1,110 @@
+#incidentPanelGadget {
+	width: 100%;
+	margin: 0px;
+}
+
+#notificationPanel {
+	position: absolute;
+	top: 10px;
+	left: 0px;
+	display: none;
+	width: 100%;
+}
+
+#editPanel {
+	border: 2px #BDBDBD solid;
+	border-radius: 5px;
+	padding: 10px;
+	background-color: #FDFDFD;
+}
+
+#incidentPanel {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#incidentPanelGroupDiv {
+	font-size: larger;
+	font-weight: bold;
+}
+
+#incidentPanel table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#incidentPanelSummaryDiv table {
+	border-collapse: separate;
+	border-spacing: 10px;
+}
+
+.incidentsSummary td {
+	padding : 10px;
+	width: 33%;
+	border-radius: 5px;
+}
+
+.incidentSummary {
+	vertical-align: middle;
+	text-align: center;
+}
+
+.incidentSummaryCount {
+	font-size: x-large;
+}
+
+.incidentSummaryLegend {
+	font-size: normal;
+}
+
+.incidentPanelBarChart {
+	font-size: 4px;
+	height: 6px;
+}
+
+#incidentPanelTableDiv {
+	overflow-y: auto;
+}
+
+.incidentsTable td {
+	padding: 5px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-top-color: #FFFFFF;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #FFFFFF;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	text-decoration: none;
+}
+
+.incident:hover {
+	color: #000000;
+	cursor: pointer;
+}
+
+.incident.color-text-CRIT:hover {
+	color: #FFFFFF;
+	background-color: #CC3333;
+}
+
+.incident.color-text-WARN:hover {
+	background-color: #EDE900;
+}
+
+.incident.color-text-UNKNOWN:hover {
+	background-color: #D0D0D0;
+}
+
+.incident.color-text-MAINT:hover {
+	color: #FFFFFF;
+	background-color: #6970a1;
+}
