@@ -10,6 +10,9 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		var tableTimer = null;
 
+		var relativeGetMetricsPath = '/gadgets/networkgauge/getNetworkDeviceMetrics.php';
+		uptimeHost="localhost";
+		
 		if (typeof options == "object") {
 			elementId = options.elementId;
 			refreshRate = options.refreshRate;
@@ -26,10 +29,38 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		*/
 		
 		oTable = initializeAlertTable("#elementInfoTable");
-		console.log("after init table");
-		 oTable.fnAddData( [
-			1,2,3,4,5,6] );
-			console.log("hi");
+		
+		//requestString = relativeGetMetricsPath  + '?uptime_host=' + uptimeHost + '&query_type=san_storage_pool' + '&device_id=' + settings.deviceId + '&port_id=' + settings.portId;
+		requestString = relativeGetMetricsPath  + '?uptime_host=' + uptimeHost + '&query_type=san_storage_pool';
+		
+		$.getJSON(requestString, function(data) {
+			}).done(function(data) {
+            //$("select.ports").empty();
+            $.each(data, function(key,value) {
+				oTable.fnAddData( [value[0],value[1],value[2],value[3],value[4]] );
+				console.log("value");
+				console.log(value[0]);
+                //$("select.ports").append('<option value="' + val + '">' + key + '</option>');
+            });
+			/*
+            if (typeof portId !== 'undefined') {
+                if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting network port dropdown to: '
+                    + portId)};
+                $("select.ports").val(portId).trigger("chosen:updated").trigger('change');
+            } else {
+                $("select.ports").trigger("chosen:updated").trigger('change');
+            }
+            $("#port-count").text($('#ports option').length);
+			*/
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
+        }).always(function() {
+            // console.log('Request completed.');
+        });
+		
+		
+		//oTable.fnAddData( [1,2,3,4,5,6] );
+			
 		
 		
 		/*
@@ -71,12 +102,13 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			console.log("after");
 			if ( !table.length > 0 ) {
 				var oTable = $(tableString).dataTable({
-					"aoColumnDefs": [ {"sTitle": "ID", "bVisible": false, "bSearchable": false, "aTargets":[0]}, 
-										{"sTitle": "Time", "aTargets":[1], "sWidth": "130px"},
-										{"sTitle": "Host", "aTargets":[2]},
-										{"sTitle": "Status", "aTargets":[3], "sType": "enum", "sWidth": "60px"},
-										{"sTitle": "Monitor", "aTargets":[4]},
-										{"sTitle": "Monitor Info", "aTargets":[5]}
+					"aoColumnDefs": [ //{"sTitle": "ID", "bVisible": false, "bSearchable": false, "aTargets":[0]}, 
+										{"sTitle": "Name", "aTargets":[0], "sWidth": "130px"},
+										{"sTitle": "Status", "aTargets":[1]},
+										//{"sTitle": "Capacity", "aTargets":[2], "sType": "enum", "sWidth": "60px"},
+										{"sTitle": "Capacity", "aTargets":[2]},
+										{"sTitle": "Used", "aTargets":[3]},
+										{"sTitle": "Total", "aTargets":[4]}
 									],
 					"aaSorting": [[ 1, "desc" ]],
 					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
