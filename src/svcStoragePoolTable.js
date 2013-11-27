@@ -36,10 +36,13 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		$.getJSON(requestString, function(data) {
 			}).done(function(data) {
             //$("select.ports").empty();
-            $.each(data, function(key,value) {
-				oTable.fnAddData( [value[0],value[1],value[2],value[3],value[4]] );
-				console.log("value");
-				console.log(value[0]);
+            $.each(data, function(key,storagePool) {
+			//$op_status = array('','Other','OK','Degraded','Stressed','Predictive Failure','Error','Non-Recoverable Error','Starting','Stopping','Stopped','In Service','No Contact','Lost Communication','Aborted','Dormant','Supporting Entity in Error','Completed','Power Mode');  
+				var op_status=["", "Other","OK","Degraded","Stressed","Predictive Failure","Error","Non-Recoverable Error","Starting","Stopping","Stopped","In Service","No Contact","Lost Communication","Aborted","Dormant","Supporting Entity in Error","Completed","Power Mode"];
+			
+			
+				oTable.fnAddData( [storagePool[0],op_status[storagePool[1]],storagePool[2],storagePool[3],storagePool[4]] );
+
                 //$("select.ports").append('<option value="' + val + '">' + key + '</option>');
             });
 			/*
@@ -106,9 +109,9 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 										{"sTitle": "Name", "aTargets":[0], "sWidth": "130px"},
 										{"sTitle": "Status", "aTargets":[1]},
 										//{"sTitle": "Capacity", "aTargets":[2], "sType": "enum", "sWidth": "60px"},
-										{"sTitle": "Capacity", "aTargets":[2]},
-										{"sTitle": "Used", "aTargets":[3]},
-										{"sTitle": "Total", "aTargets":[4]}
+										{"sTitle": "Capacity (%)", "aTargets":[2]},
+										{"sTitle": "Used (TB)", "aTargets":[3]},
+										{"sTitle": "Total (TB)", "aTargets":[4]}
 									],
 					"aaSorting": [[ 1, "desc" ]],
 					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
