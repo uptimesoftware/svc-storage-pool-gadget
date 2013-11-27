@@ -5,10 +5,10 @@ $(function() {
 
 	var elementMonitorListSettings = {
 		'elementId' : -1,
-		'refreshRate' : 30,
+		'refreshRate' : 30
 
 	};
-	var myChart = null;
+	var myTable = null;
 	var divsToDim = [ '#widgetChart', '#widgetSettings' ];
 
 	$("#widgetSettings").hide();
@@ -38,8 +38,8 @@ $(function() {
 	function showEditPanel() {
 		// stop any existing timers in the charts (for when we save and change
 		// settings)
-		if (myChart) {
-			myChart.stopTimer();
+		if (myTable) {
+			myTable.stopTimer();
 		}
 		$("#refreshRate").val(elementMonitorListSettings.refreshRate);
 		$("#widgetSettings").slideDown();
@@ -62,7 +62,7 @@ $(function() {
 	function displayPanel(settings) {
 		// Display the chart
 		$('#widgetChart').show();
-		displayChart(settings);
+		displayTable(settings);
 		resizeGadget();
 	}
 
@@ -73,11 +73,13 @@ $(function() {
 	function populateIdSelector() {
 		disableSettings();
 		var deferred = UPTIME.pub.gadgets.promises.defer();
-		$('#elementId').empty().append($("<option />").val(-1).text("Loading..."));
+		//$('#elementId').empty().append($("<option />").val(-1).text("Loading..."));
+				
 		var elementSelector = $('#elementId').empty();
+		elementSelector.empty().append($("<option />").val(-1).text("Loading..."));
 		//elementSelector.append($("<option />").val(this.id).text(this.name));
-		elementSelector.append($("<option />").val("1").text("element1"));
-		//console.log('Updated')
+		//elementSelector.append($("<option />").val("1").text("element1"));
+		console.log('Updated')
 		
 		requestString = getMetricsPath + '?uptime_host=' + 'localhost' + '&query_type=network_devices';
 		$.getJSON(requestString, function(data) {
@@ -105,7 +107,10 @@ $(function() {
 				console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
 			}).always(function() {
 				// console.log('Request completed.');
-        });
+			});
+			return deferred.promise.then(null, function(error) {
+			displayStatusBar(error, "Error Loading the List of Elements from up.time Controller");
+		});
 		
 		
 		
@@ -192,14 +197,16 @@ $(function() {
 		displayStatusBar(errorObject, "Error Communicating with up.time");
 	}
 
-	function displayChart(settings) {
+	function displayTable(settings) {
 		// clean up any resources before creating a new chart.
-		if (myChart) {
-			myChart.destroy();
+		if (myTable) {
+			myTable.destroy();
 		}
 
 		// display chart
-		myChart = new UPTIME.ElementStatusSimpleTableChart(settings, displayStatusBar, clearStatusBar);
+		
+		myTable = new UPTIME.ElementStatusSimpleTableChart(settings, displayStatusBar, clearStatusBar);
+		
 	}
 
 });

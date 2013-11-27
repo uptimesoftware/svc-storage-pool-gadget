@@ -19,7 +19,8 @@
 		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/svcStoragePool.css" />
 
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>		
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/svcStoragePoolTable.js"></script>
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/svcStoragePool.js"></script>		
 	</head>
 	<body>
@@ -51,13 +52,7 @@
 			</form>
 		</div>
 
-		<div id = "widgetChart">
-			<table id="elementInfoTable"><tbody><tr>
-				<td id="elementStatus" class="element-status"><div class="os-icon-container"><div class="os-icon"><img src="/images/icon-system.gif" class="os-icon-img"/></div></div><div id="elementStatusText"></div></td>
-				<td id="topoParentsStatus" class="topo-parents-status">Topological Parents:<br/></td>
-			</tr><tbody></table>
-			<table id='statusTable' style='width:100%; border:0px;'><thead></thead><tbody></tbody></table>
-		</div>
+		<table cellpadding="0" cellspacing="0" border="0" class="display" id="elementInfoTable"></table>
 		<div id="statusBar"></div>
 	</body>
 </html>

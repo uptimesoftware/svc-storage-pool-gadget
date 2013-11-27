@@ -3,44 +3,36 @@ if (typeof UPTIME == "undefined") {
 }
 
 if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
+
 	UPTIME.ElementStatusSimpleTableChart = function(options, displayStatusBar, clearStatusBar) {
 		var elementId = null;
 		var refreshRate = null;
-		var doLastCheckTime = null;
-		var doLastTransitionTime = null;
-		var doMessage = null;
-		var doIsAcknowledged = null;
-		var doAcknowledgedComment = null;
 
-		var chartTimer = null;
+		var tableTimer = null;
 
 		if (typeof options == "object") {
 			elementId = options.elementId;
 			refreshRate = options.refreshRate;
-			doLastCheckTime = options.lastCheckTime;
-			doLastTransitionTime = options.lastTransitionTime;
-			doMessage = options.message;
-			doIsAcknowledged = options.isAcknowledged;
-			doAcknowledgedComment = options.acknowledgedComment;
+			//doLastCheckTime = options.lastCheckTime;
 		}
 
 		var statusCells = [ getStatusCellSpec("name", nameLink, "Monitor"), getStatusCellSpec("status", directValue, "Status") ];
-
-		if (doLastTransitionTime) {
-			statusCells.push(getStatusCellSpec("lastTransitionTime", durationValue, "Duration"));
-		}
+		
+		// used to be in original
+		/*
 		if (doLastCheckTime) {
 			statusCells.push(getStatusCellSpec("lastCheckTime", directValue, "Last Check"));
 		}
-		if (doMessage) {
-			statusCells.push(getStatusCellSpec("message", directValue, "Message"));
-		}
-		if (doIsAcknowledged) {
-			statusCells.push(getStatusCellSpec("isAcknowledged", directValue, "Ack"));
-		}
-		if (doAcknowledgedComment) {
-			statusCells.push(getStatusCellSpec("acknowledgedComment", directValue, "Ack Message"));
-		}
+		*/
+		
+		oTable = initializeAlertTable("#elementInfoTable");
+		console.log("after init table");
+		 oTable.fnAddData( [
+			1,2,3,4,5,6] );
+			console.log("hi");
+		
+		
+		/*
 
 		$('#statusTable tbody').on('click', onStatusClick);
 		$('#elementStatus').on('click', onStatusClick);
@@ -68,7 +60,44 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				return 0;
 			};
 		}());
+		*/
 
+		function initializeAlertTable(tableString) {
+		console.log("in init");
+			// Initialize table if it's not initialized
+			var table = $.fn.dataTable.fnTables(true);
+			console.log("init");
+			console.log(table);
+			console.log("after");
+			if ( !table.length > 0 ) {
+				var oTable = $(tableString).dataTable({
+					"aoColumnDefs": [ {"sTitle": "ID", "bVisible": false, "bSearchable": false, "aTargets":[0]}, 
+										{"sTitle": "Time", "aTargets":[1], "sWidth": "130px"},
+										{"sTitle": "Host", "aTargets":[2]},
+										{"sTitle": "Status", "aTargets":[3], "sType": "enum", "sWidth": "60px"},
+										{"sTitle": "Monitor", "aTargets":[4]},
+										{"sTitle": "Monitor Info", "aTargets":[5]}
+									],
+					"aaSorting": [[ 1, "desc" ]],
+					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+						$(nRow).attr('id', aData[0]);
+						return nRow;
+					},
+					"iDisplayLength": 25,
+					"fnInitComplete": function(oSettings, json) {
+						$(".dataTables_filter").append("<a class='resetFilter' href=#><img class='resetFilterIcon' src=images/close_icon.gif></a>");
+					}
+				});
+				$(".resetFilter").click(function(e){
+					oTable.fnFilter("");
+				});
+			} else {
+				oTable = $(tableString).dataTable();
+			}
+			
+			return oTable;
+		}
+		
 		function getStatusCellSpec(field, valueGetter, header) {
 			return {
 				field : field,
@@ -202,28 +231,28 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 			// Now let's set refresh rate for updating the table
 			if (refreshRate > 0) {
-				chartTimer = window.setTimeout(updateChart, refreshRate * 1000);
+				tableTimer = window.setTimeout(updateChart, refreshRate * 1000);
 			}
 		}
 
-		function stopChartTimer() {
-			if (chartTimer) {
-				window.clearTimeout(chartTimer);
+		function stoptableTimer() {
+			if (tableTimer) {
+				window.clearTimeout(tableTimer);
 			}
 		}
 
 		// public functions for this function/class
 		var publicFns = {
-			stopTimer : stopChartTimer,
+			stopTimer : stoptableTimer,
 			startTimer : function() {
-				if (chartTimer) {
+				if (tableTimer) {
 					updateChart();
 				}
 			},
 			destroy : function() {
 				$('#statusTable tbody').off('click');
 				$('#elementStatus').off('click');
-				stopChartTimer();
+				stoptableTimer();
 			}
 		};
 		return publicFns; // Important: we need to return the public
