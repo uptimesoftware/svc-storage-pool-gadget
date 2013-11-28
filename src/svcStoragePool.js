@@ -16,6 +16,7 @@ $(function() {
 	$('.widget-option').change($.debounce(500, settingChanged));
 
 	$("#closeSettings").click(function() {
+		settingChanged(); //plui
 		$("#widgetSettings").slideUp();
 	});
 
@@ -28,6 +29,10 @@ $(function() {
 	function settingChanged() {
 		elementMonitorListSettings.elementId = $('#elementId').val();
 		elementMonitorListSettings.refreshRate = $('#refreshRate').val();
+		console.log($('#elementId').val());
+		console.log("in settingChanged3");
+		console.log(elementMonitorListSettings.elementId);
+		
 		uptimeGadget.saveSettings(elementMonitorListSettings).then(onGoodSave, onBadAjax);
 	}
 
@@ -76,10 +81,12 @@ $(function() {
 		//$('#elementId').empty().append($("<option />").val(-1).text("Loading..."));
 				
 		var elementSelector = $('#elementId').empty();
-		elementSelector.empty().append($("<option />").val(-1).text("Loading..."));
+		elementSelector.append($("<option />").val(-1).text("Loading..."));
+		//elementSelector.empty().append($("<option />").val(-1).text("Loading..."));
+		
 		//elementSelector.append($("<option />").val(this.id).text(this.name));
 		//elementSelector.append($("<option />").val("1").text("element1"));
-		console.log('Updated')
+		
 		
 		requestString = getMetricsPath + '?uptime_host=' + 'localhost' + '&query_type=network_devices';
 		$.getJSON(requestString, function(data) {
@@ -145,9 +152,16 @@ $(function() {
 
 	// Main Gadget Logic Start
 	function onGoodLoad(settings) {
+	
+	console.log("in onGoodLoad");
+	console.log(settings);
+	console.log("in onGoodLoad2");
+	
 		if (settings) {
+		
 			// update (hidden) edit panel with settings
 			$("#refreshRate").val(settings.refreshRate);
+			$("#elementId").val(settings.elementId);
 			$.extend(elementMonitorListSettings, settings);
 		}
 		if (settings) {
@@ -202,7 +216,7 @@ $(function() {
 		if (myTable) {
 			myTable.destroy();
 		}
-
+console.log("in displayTable");
 		// display chart
 		
 		myTable = new UPTIME.ElementStatusSimpleTableChart(settings, displayStatusBar, clearStatusBar);

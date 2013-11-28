@@ -30,6 +30,9 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		
 		oTable = initializeAlertTable("#elementInfoTable");
 		
+		updateTable();
+		
+		/*
 		//requestString = relativeGetMetricsPath  + '?uptime_host=' + uptimeHost + '&query_type=san_storage_pool' + '&device_id=' + settings.deviceId + '&port_id=' + settings.portId;
 		requestString = relativeGetMetricsPath  + '?uptime_host=' + uptimeHost + '&query_type=san_storage_pool';
 		
@@ -37,30 +40,19 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}).done(function(data) {
             //$("select.ports").empty();
             $.each(data, function(key,storagePool) {
-			//$op_status = array('','Other','OK','Degraded','Stressed','Predictive Failure','Error','Non-Recoverable Error','Starting','Stopping','Stopped','In Service','No Contact','Lost Communication','Aborted','Dormant','Supporting Entity in Error','Completed','Power Mode');  
-				var op_status=["", "Other","OK","Degraded","Stressed","Predictive Failure","Error","Non-Recoverable Error","Starting","Stopping","Stopped","In Service","No Contact","Lost Communication","Aborted","Dormant","Supporting Entity in Error","Completed","Power Mode"];
-			
+
+				var op_status=["", "Other","OK","Degraded","Stressed","Predictive Failure","Error","Non-Recoverable Error","Starting","Stopping","Stopped","In Service","No Contact","Lost Communication","Aborted","Dormant","Supporting Entity in Error","Completed","Power Mode"];		
 			
 				oTable.fnAddData( [storagePool[0],op_status[storagePool[1]],storagePool[2],storagePool[3],storagePool[4]] );
 
                 //$("select.ports").append('<option value="' + val + '">' + key + '</option>');
             });
-			/*
-            if (typeof portId !== 'undefined') {
-                if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting network port dropdown to: '
-                    + portId)};
-                $("select.ports").val(portId).trigger("chosen:updated").trigger('change');
-            } else {
-                $("select.ports").trigger("chosen:updated").trigger('change');
-            }
-            $("#port-count").text($('#ports option').length);
-			*/
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
         }).always(function() {
             // console.log('Request completed.');
         });
-		
+		*/
 		
 		//oTable.fnAddData( [1,2,3,4,5,6] );
 			
@@ -100,9 +92,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		console.log("in init");
 			// Initialize table if it's not initialized
 			var table = $.fn.dataTable.fnTables(true);
-			console.log("init");
-			console.log(table);
-			console.log("after");
+
 			if ( !table.length > 0 ) {
 				var oTable = $(tableString).dataTable({
 					"aoColumnDefs": [ //{"sTitle": "ID", "bVisible": false, "bSearchable": false, "aTargets":[0]}, 
@@ -243,7 +233,33 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			$('img.os-icon-img').attr('title', element.typeOs);
 		}
 
-		function updateChart() {
+		function updateTable() {
+			oTable.fnClearTable();
+			
+			requestString = relativeGetMetricsPath  + '?uptime_host=' + uptimeHost + '&query_type=san_storage_pool';
+		
+			$.getJSON(requestString, function(data) {
+				}).done(function(data) {
+				//$("select.ports").empty();
+				$.each(data, function(key,storagePool) {
+
+					var op_status=["", "Other","OK","Degraded","Stressed","Predictive Failure","Error","Non-Recoverable Error","Starting","Stopping","Stopped","In Service","No Contact","Lost Communication","Aborted","Dormant","Supporting Entity in Error","Completed","Power Mode"];		
+				
+					oTable.fnAddData( [storagePool[0],op_status[storagePool[1]],storagePool[2],storagePool[3],storagePool[4]] );
+
+					//$("select.ports").append('<option value="' + val + '">' + key + '</option>');
+				});
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
+			}).always(function() {
+				// console.log('Request completed.');
+			});
+			
+			var currentTime = new Date();
+			stringTime = getDateString(currentTime);
+			$("#lastUpdate").html("Last Refresh:  "+currentTime.getFullYear()+"-"+stringTime[0]+"-"+stringTime[1]+" "+stringTime[2]+":"+stringTime[3]+":"+stringTime[4]);
+		
+		/*
 			if (!elementId || elementId < 0) {
 				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
 						"No Elements Found");
@@ -263,10 +279,10 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
 								"Error Getting Element Status from up.time Controller");
 					});
-
+*/
 			// Now let's set refresh rate for updating the table
 			if (refreshRate > 0) {
-				tableTimer = window.setTimeout(updateChart, refreshRate * 1000);
+				tableTimer = window.setTimeout(updateTable, refreshRate * 1000);
 			}
 		}
 
@@ -275,18 +291,41 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				window.clearTimeout(tableTimer);
 			}
 		}
+		
+		function getDateString(inputDate) {
+			var returnString = new Array();
+			
+			if (parseInt(inputDate.getMonth()+1) < 10) {
+				stringMonth = "0"+parseInt(inputDate.getMonth()+1);
+			} else stringMonth = inputDate.getMonth()+1;
+			if (inputDate.getDate() < 10) {
+				stringDate = "0"+inputDate.getDate();
+			} else stringDate = inputDate.getDate();
+			if (inputDate.getHours() < 10) {
+				stringHour = "0"+inputDate.getHours();
+			} else stringHour = inputDate.getHours();
+			if (inputDate.getMinutes() < 10) {
+				stringMinute = "0"+inputDate.getMinutes();
+			} else stringMinute = inputDate.getMinutes();
+			if (inputDate.getSeconds() < 10) {
+				stringSecond = "0"+inputDate.getSeconds();
+			} else stringSecond = inputDate.getSeconds();
+			
+			return [stringMonth, stringDate, stringHour, stringMinute, stringSecond]
+		
+		}
 
 		// public functions for this function/class
 		var publicFns = {
 			stopTimer : stoptableTimer,
 			startTimer : function() {
 				if (tableTimer) {
-					updateChart();
+					updateTable();
 				}
 			},
 			destroy : function() {
-				$('#statusTable tbody').off('click');
-				$('#elementStatus').off('click');
+				//$('#statusTable tbody').off('click');
+				//$('#elementStatus').off('click');
 				stoptableTimer();
 			}
 		};
