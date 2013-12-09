@@ -1,0 +1,6 @@
+name=IBM SAN Storage Pool Gadget
+version=1.0
+platforms=linux windows
+description=This gadget displays status and capacity information of IBM SAN Storage Pool.  This works in conjunction with the IBM SAN SVC monitor.
+requiresAgentScript=false
+restartCore=false

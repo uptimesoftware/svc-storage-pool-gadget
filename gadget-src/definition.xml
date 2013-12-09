@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Module>
+  <ModulePrefs title="SVC Storage Pool Panel" 
+		description="Display detailed availability information for a single element including topological parents status and service monitor status."
+		thumbnail="elementPanelThm.png">
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
+  <Content type="html">
+<![CDATA[ 
+
+<html lang="en">
+	<head>
+		#includeResources(jquery)
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>Element Panel</title>
+
+		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/svcStoragePool.css" />
+
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>		
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/svcStoragePoolTable.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/svcStoragePool.js"></script>		
+	</head>
+	<body>
+		<div id="widgetSettings">
+
+			<form id="widgetOptions">
+				<div class="elementSelectorDiv editSection">
+					<label for="elementId">Select Element:</label><br/>
+					<select id="elementId" class="widget-option">
+						<option value="-1">Loading...</option>
+					</select>
+				</div>
+
+				<div class="refreshRateDiv editSection">
+					<label for="refreshRate">Refresh Rate:</label>
+					<select id="refreshRate" class="widget-option" name="refreshRate">
+						<option value="30">30s</option>
+						<option value="60">1m</option>
+						<option value="300">5m</option>
+						<option value="600">10m</option>
+						<option value="900">15m</option>
+						<option value="3600">1h</option>
+						<option value="-1">Never</option>
+					</select>
+				</div>
+				<div class="buttonsDiv">
+					<button id="closeSettings">Close</button>
+				</div>
+			</form>
+		</div>
+
+		<table cellpadding="0" cellspacing="0" border="0" class="display" id="elementInfoTable"></table>
+		<br><br>
+		<div id="lastUpdate"></div>
+		<div id="statusBar"></div>
+	</body>
+</html>
+
+]]>
+  </Content> 
+</Module>
