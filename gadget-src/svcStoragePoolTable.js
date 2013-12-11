@@ -38,7 +38,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 										{"sTitle": "Name", "aTargets":[0], "sWidth": "130px"},
 										{"sTitle": "Status", "aTargets":[1]},
 										//{"sTitle": "Capacity", "aTargets":[2], "sType": "enum", "sWidth": "60px"},
-										{"sTitle": "Capacity (%)", "aTargets":[2]},
+										{"sTitle": "Used Capacity (%)", "aTargets":[2]},
 										{"sTitle": "Used (TB)", "aTargets":[3]},
 										{"sTitle": "Total (TB)", "aTargets":[4]}
 									],
