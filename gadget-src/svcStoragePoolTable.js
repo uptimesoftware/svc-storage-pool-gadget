@@ -21,14 +21,16 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		var statusCells = [ getStatusCellSpec("name", nameLink, "Monitor"), getStatusCellSpec("status", directValue, "Status") ];
 		
-		
+		console.log("before init");
 		oTable = initializeAlertTable("#elementInfoTable");
+		console.log("after init; before update table");
 		
 		updateTable();
 		
+		console.log("after update table");	
 
 		function initializeAlertTable(tableString) {
-		console.log("in init");
+			console.log("in init");
 			// Initialize table if it's not initialized
 			var table = $.fn.dataTable.fnTables(true);
 
@@ -173,34 +175,43 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function updateTable() {
+			console.log("in updateTable");
 			oTable.fnClearTable();
 			
-		requestString = relativeGetMetricsPath  + '?erdc_id=' + elementId + '&query_type=get_data';
+			requestString = relativeGetMetricsPath  + '?erdc_id=' + elementId + '&query_type=get_data';
+			console.log("request string -> %o", requestString);
 		
 			$.getJSON(requestString, function(data) {
 				}).done(function(data) {
+				console.log("getJSON(get_data) data -> %o", data );
 				$.each(data, function(key,storagePool) {
 
 					var op_status=["", "Other","OK","Degraded","Stressed","Predictive Failure","Error","Non-Recoverable Error","Starting","Stopping","Stopped","In Service","No Contact","Lost Communication","Aborted","Dormant","Supporting Entity in Error","Completed","Power Mode"];		
-				
-					oTable.fnAddData( [storagePool[0],op_status[storagePool[1]],storagePool[2],storagePool[3],storagePool[4]] );
-
+					console.log("in updateTable before try");
+					try {
+						console.log("in updateTable trying");
+						oTable.fnAddData( [storagePool[0],op_status[storagePool[1]],storagePool[2],storagePool[3],storagePool[4]] );
+					} catch (err) {
+						console.log("updateTable(oTable.fnAddData) -> %o", err );
+					}
+					console.log("in updateTable after try");
 				});
+				
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				console.log(' - Request failed! ' + textStatus);
 			}).always(function() {
-				// console.log('Request completed.');
+				console.log('Request completed.');
 			});
 			
 			var currentTime = new Date();
 			stringTime = getDateString(currentTime);
 			$("#lastUpdate").html("Last Refresh:  "+currentTime.getFullYear()+"-"+stringTime[0]+"-"+stringTime[1]+" "+stringTime[2]+":"+stringTime[3]+":"+stringTime[4]);
 		
-		
 			// Now let's set refresh rate for updating the table
 			if (refreshRate > 0) {
 				tableTimer = window.setTimeout(updateTable, refreshRate * 1000);
 			}
+			console.log("finished updateTable");
 		}
 
 		function stoptableTimer() {

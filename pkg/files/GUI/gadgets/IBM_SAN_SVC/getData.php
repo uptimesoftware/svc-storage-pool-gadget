@@ -40,12 +40,9 @@
 	}
 
 	elseif ($query_type == "get_data") {
-
 		$sql2 = "select ro.object_name as object_name, rov.name as name , rov.value as value, rov.ranged_object_id, rov.sample_time from ranged_object ro join ranged_object_value rov on ro.id = rov.ranged_object_id where ro.instance_id = " . $erdc_id . " and rov.name like 'SP%' and rov.name != 'SPRemaining' and rov.sample_time = (select max(rov.sample_time) from ranged_object ro join ranged_object_value rov on ro.id = rov.ranged_object_id where ro.instance_id = " . $erdc_id . " and rov.name like 'SP%')";
 
-
         $query2 = odbc_exec($con,$sql2);
-
 
 		$new_result = array();
 		$i = 0;
@@ -56,16 +53,19 @@
 			if(!in_array(odbc_result($query2,"object_name"), $new_result)) {
 				$new_result[$i] = odbc_result($query2,"object_name");
 				$i++;
+				$key_arr[$i-1][0] =0;
+				$key_arr[$i-1][1] =0;
+				$key_arr[$i-1][2] =0;
+				$key_arr[$i-1][3] =0;
 			}
-		
-			$key_arr[$i-1][] =  odbc_result($query2,"value");
+				$name=odbc_result($query2,"name");
+				$queryresult=odbc_result($query2,"value");
+				
+				if ($name == "SPOperationalStatus") { $key_arr[$i-1][0] = $queryresult; }
+				elseif ($name == "SPOverall") { $key_arr[$i-1][1] = $queryresult; }
+				elseif ($name == "SPUsed") { $key_arr[$i-1][2] = $queryresult; }
+				elseif ($name == "SPTotal") { $key_arr[$i-1][3] = $queryresult; }				
         }
-
-		for($j=0;$j<count($key_arr);$j++) {
-			$key = $key_arr[$j][2];
-			$key_arr[$j][2] = $key_arr[$j][3];
-			$key_arr[$j][3] = $key;
-		}
 
 		$final_array = array_combine($new_result, $key_arr);
 

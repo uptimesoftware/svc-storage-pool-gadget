@@ -216,7 +216,7 @@ $(function() {
 		if (myTable) {
 			myTable.destroy();
 		}
-console.log("in displayTable");
+		console.log("in displayTable");
 		// display chart
 		
 		myTable = new UPTIME.ElementStatusSimpleTableChart(settings, displayStatusBar, clearStatusBar);
